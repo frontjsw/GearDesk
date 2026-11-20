@@ -1,0 +1,26 @@
+.lnb {
+  flex-shrink: 0;
+  height: 100%;
+  background-color: #100a1d;
+  .nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px 0;
+    padding: 48px 16px;
+    .nav-item {
+      .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0 12px;
+        .lucide {
+          color: #fff;
+        }
+        .nav-title {
+          color: #fff;
+          font-size: 14px;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
