@@ -7,6 +7,8 @@ import type { Database } from "../../../types/database";
 
 import { tableFeatures, type ColumnDef } from "@tanstack/react-table";
 import Table from "../../../components/common/Table/Table";
+import SearchArea from "../../../components/common/SearchArea/SearchArea";
+import Input from "../../../components/common/Input/Input";
 const customerSchema = z.object({
   name: z.string().min(2, "이름을 입력해주세요"),
   phone: z.string().optional(),
@@ -47,54 +49,41 @@ const CustomersListPage = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label htmlFor="name">이름</label>
-          <input
-            type="text"
-            id="name"
-            placeholder="이름을 입력해주세요."
-            {...register("name")}
-          />
-        </div>
-        <div>
-          <label htmlFor="phone">전화번호</label>
-          <input
-            type="text"
-            id="phone"
-            placeholder="전화번호를 입력해주세요."
-            {...register("phone")}
-          />
-        </div>
-        <div>
-          <label htmlFor="email">이메일</label>
-          <input
-            type="text"
-            id="email"
-            placeholder="이메일을 입력해주세요."
-            {...register("email")}
-          />
-        </div>
-        <div>
-          <label htmlFor="memo">메모</label>
-          <input
-            type="text"
-            id="memo"
-            placeholder="메모를 입력해주세요."
-            {...register("memo")}
-          />
-        </div>
+    <div className="page-container">
+      <SearchArea onSubmit={handleSubmit(onSubmit)}>
+        <Input
+          label={"이름"}
+          id="name"
+          placeholder="이름을 입력해주세요."
+          {...register("name")}
+        />
+
+        <Input
+          label="전화번호"
+          id="phone"
+          placeholder="전화번호를 입력해주세요."
+          {...register("phone")}
+        />
+        <Input
+          label="이메일"
+          id="email"
+          placeholder="이메일을 입력해주세요."
+          {...register("email")}
+        />
+        <Input
+          label="메모"
+          id="memo"
+          placeholder="메모를 입력해주세요."
+          {...register("memo")}
+        />
         <button type="submit" disabled={isPending}>
           추가
         </button>
-      </form>
+      </SearchArea>
+
       {errors.name && <>{errors.name?.message}</>}
       {isLoading && <>Loading....</>}
-      {!isLoading && (!customersData || customersData.length === 0) && (
-        <>사용자가없습니다.</>
-      )}
-      {!isLoading && customersData && customersData.length > 0 && (
+      {!isLoading && customersData && (
         <>
           <Table
             tableKey="customers-table"
