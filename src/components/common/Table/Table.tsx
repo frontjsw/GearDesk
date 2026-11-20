@@ -10,6 +10,7 @@ const Table = <T extends Record<string, any>>({
   tableKey,
   columns,
   data,
+  actionButtons,
 }: TableProps<T>) => {
   const features = tableFeatures({});
   const table = useTable({
@@ -20,10 +21,7 @@ const Table = <T extends Record<string, any>>({
   });
   return (
     <div className="app-table">
-      <div className="button-wrap">
-        <button>추가</button>
-        <button>삭제</button>
-      </div>
+      <div className="button-wrap">{actionButtons}</div>
       <div className="app-table-wrapper">
         <div className="app-table-inner">
           <table className="table">

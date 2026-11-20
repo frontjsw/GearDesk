@@ -9,6 +9,9 @@ import { tableFeatures, type ColumnDef } from "@tanstack/react-table";
 import Table from "../../../components/common/Table/Table";
 import SearchArea from "../../../components/common/SearchArea/SearchArea";
 import Input from "../../../components/common/Input/Input";
+import Modal from "../../../components/layout/Modal/Modal";
+import { useState } from "react";
+import Button from "../../../components/common/Button/Button";
 const customerSchema = z.object({
   name: z.string().min(2, "이름을 입력해주세요"),
   phone: z.string().optional(),
@@ -30,8 +33,8 @@ const columns: Array<ColumnDef<typeof features, Customer>> = [
   { accessorKey: "memo", header: "메모", cell: (info) => info.getValue() },
 ];
 const CustomersListPage = () => {
+  const [createModalOpen, setCreateModalOpen] = useState(false);
   const { data: customersData, isLoading } = useCustomers();
-
   const { mutate, isPending } = useCreateCustomer();
   const {
     register,
@@ -50,14 +53,46 @@ const CustomersListPage = () => {
 
   return (
     <div className="page-container">
-      <SearchArea onSubmit={handleSubmit(onSubmit)}>
+      <SearchArea></SearchArea>
+
+      {errors.name && <>{errors.name?.message}</>}
+      {isLoading && <>Loading....</>}
+      {!isLoading && customersData && (
+        <>
+          <Table
+            tableKey="customers-table"
+            columns={columns}
+            data={customersData}
+            actionButtons={
+              <>
+                <Button
+                  label={"추가"}
+                  onClick={() => setCreateModalOpen(true)}
+                />
+                <Button label="삭제" />
+              </>
+            }
+          />
+        </>
+      )}
+      <Modal
+        isOpen={createModalOpen}
+        title={"고객 추가"}
+        onClose={() => setCreateModalOpen(false)}
+        actionButtons={
+          <Button
+            label={"추가"}
+            disabled={isPending}
+            onClick={handleSubmit(onSubmit)}
+          />
+        }
+      >
         <Input
           label={"이름"}
           id="name"
           placeholder="이름을 입력해주세요."
           {...register("name")}
         />
-
         <Input
           label="전화번호"
           id="phone"
@@ -76,22 +111,7 @@ const CustomersListPage = () => {
           placeholder="메모를 입력해주세요."
           {...register("memo")}
         />
-        <button type="submit" disabled={isPending}>
-          추가
-        </button>
-      </SearchArea>
-
-      {errors.name && <>{errors.name?.message}</>}
-      {isLoading && <>Loading....</>}
-      {!isLoading && customersData && (
-        <>
-          <Table
-            tableKey="customers-table"
-            columns={columns}
-            data={customersData}
-          />
-        </>
-      )}
+      </Modal>
     </div>
   );
 };
